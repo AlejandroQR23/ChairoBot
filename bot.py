@@ -1,15 +1,20 @@
 import logging
+import os
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+from dotenv import load_dotenv
 
 from commands.main_commands import *
 
-BOT_TOKEN = "1984324208:AAHWZ7aLzrGiguzp_VZqBXxzphIO3aCMGjI"
 
 # Enable logging
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-                    level=logging.INFO)
+logging.basicConfig(
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
+)
 
 logger = logging.getLogger(__name__)
+
+load_dotenv()
+token = os.environ.get("BOT_TOKEN")
 
 
 def error(update, context):
@@ -20,7 +25,7 @@ def error(update, context):
 def main():
     """Start the bot."""
 
-    updater = Updater(BOT_TOKEN, use_context=True)
+    updater = Updater(token, use_context=True)
 
     # Get the dispatcher to register handlers
     dp = updater.dispatcher
@@ -29,7 +34,8 @@ def main():
     dp.add_handler(CommandHandler("inicio", start))
     dp.add_handler(CommandHandler("ayuda", help))
     dp.add_handler(CommandHandler("hola", saludar))
-
+    dp.add_handler(CommandHandler("gato", enviar_gato))
+    dp.add_handler(CommandHandler("traducir", traducir))
     # on noncommand i.e message - echo the message on Telegram
     dp.add_handler(MessageHandler(Filters.text, echo))
 
@@ -45,5 +51,5 @@ def main():
     updater.idle()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
